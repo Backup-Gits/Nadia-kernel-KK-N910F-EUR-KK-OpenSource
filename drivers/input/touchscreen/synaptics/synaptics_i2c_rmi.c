@@ -26,6 +26,12 @@
 #include <linux/earlysuspend.h>
 #endif
 #include "synaptics_i2c_rmi.h"
+#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
+#include <linux/input/doubletap2wake.h>
+#endif
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+#include <linux/input/tap2unlock.h>
+#endif
 
 #include <linux/i2c/synaptics_rmi.h>
 #include <linux/of_gpio.h>
@@ -5379,6 +5385,13 @@ static void synaptics_rmi4_late_resume(struct early_suspend *h)
 static int synaptics_rmi4_suspend(struct device *dev)
 {
 	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
+    
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+    if (t2u_switch > 0 && t2u_allow == false && t2u_scr_suspended == false) {
+        pr_info("t2u : going to t2u_force_suspend");
+        return 0;
+    }
+#endif
 
 	dev_dbg(&rmi4_data->i2c_client->dev, "%s\n", __func__);
 
@@ -5412,6 +5425,13 @@ static int synaptics_rmi4_resume(struct device *dev)
 {
 	int retval;
 	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
+    
+#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
+    if (t2u_switch > 0 && t2u_allow == false && t2u_scr_suspended == false) {
+        pr_info("t2u : touch sensor awake blocked by t2u protect");
+        return 0;
+    }
+#endif
 
 	dev_dbg(&rmi4_data->i2c_client->dev, "%s\n", __func__);
 
