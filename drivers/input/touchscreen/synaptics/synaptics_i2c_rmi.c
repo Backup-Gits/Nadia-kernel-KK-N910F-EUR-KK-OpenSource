@@ -5387,7 +5387,7 @@ static int synaptics_rmi4_suspend(struct device *dev)
 	struct synaptics_rmi4_data *rmi4_data = dev_get_drvdata(dev);
     
 #ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
-    if (incall_active == true && prox_covered == false)
+    if (incall_active == true)
         return 0;
     if (t2u_switch > 0 && t2u_allow == false && t2u_scr_suspended == false) {
         pr_info("t2u : going to t2u_force_suspend");
