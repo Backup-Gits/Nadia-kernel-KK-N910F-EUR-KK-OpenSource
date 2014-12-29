@@ -85,8 +85,3 @@ obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI)		+= synaptics/
 obj-$(CONFIG_TOUCHSCREEN_SYNAPTICS_I2C_RMI_G)		+= synaptics/
 obj-$(CONFIG_INPUT_WACOM) += wacom/
 obj-$(CONFIG_TOUCHSCREEN_STM)		+= stm/
-# for sweep2wake, leave 1st to avoid merge issues at the end of the file
-obj-$(CONFIG_TOUCHSCREEN_SWEEP2WAKE) += sweep2wake.o
-# for doubletap2wake, leave 1st to avoid merge issues at the end of the file
-obj-$(CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE) += doubletap2wake.o
-obj-$(CONFIG_TOUCHSCREEN_TAP2UNLOCK) += tap2unlock.o

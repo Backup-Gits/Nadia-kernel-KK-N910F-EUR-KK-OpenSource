@@ -23,9 +23,6 @@
 #include <linux/err.h>
 
 #include "mdss_dsi.h"
-#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
-#include <linux/input/tap2unlock.h>
-#endif
 
 #define DT_CMD_HDR 6
 
@@ -519,17 +516,6 @@ end:
 	return 0;
 }
 
-#ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
-	extern bool s2w_scr_suspended;
-#endif
-
-#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-	extern bool dt2w_scr_suspended;
-	extern bool t2u_scr_suspended;
-	extern void touch_suspend(void);
-	extern void touch_resume(void);
-#endif
-
 static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 {
 	struct mdss_dsi_ctrl_pdata *ctrl = NULL;
@@ -557,25 +543,6 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 end:
 	pinfo->blank_state = MDSS_PANEL_BLANK_BLANK;
 	pr_debug("%s:-\n", __func__);
-
-#ifdef CONFIG_POWERSUSPEND
-    set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE);
-#endif
-
-#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-	dt2w_scr_suspended = false;
-	t2u_scr_suspended = false;
-#endif
-#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
-	if ((t2u_switch > 0) && (t2u_allow == false))
-	{
-		t2u_scr_suspended = false;
-		pr_info("t2u : calling to suspend touch ");
-		touch_suspend();
-
-	}
-#endif
-
 	return 0;
 }
 
@@ -603,32 +570,7 @@ static int mdss_dsi_panel_low_power_config(struct mdss_panel_data *pdata,
 	else
 		pinfo->blank_state = MDSS_PANEL_BLANK_UNBLANK;
 
-	if (ctrl->panel_config.bare_board == true)
-		goto disable_regs;
-
-	if (ctrl->off_cmds.cmd_cnt)
-		mdss_dsi_panel_cmds_send(ctrl, &ctrl->off_cmds);
-
-disable_regs:
-	mdss_dsi_panel_reset(pdata, 0);
-	mdss_dsi_panel_regulator_on(pdata, 0);
-
-	pr_info("%s-:\n", __func__);
-
-#ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
-	s2w_scr_suspended = true;
-#endif
-
-#ifdef CONFIG_TOUCHSCREEN_DOUBLETAP2WAKE
-	dt2w_scr_suspended = true;
-#endif
-#ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
-	t2u_scr_suspended = true;
-	t2u_allow = false;
-	if (t2u_switch > 0)
-		touch_resume();
-#endif
-
+	pr_debug("%s:-\n", __func__);
 	return 0;
 }
 
