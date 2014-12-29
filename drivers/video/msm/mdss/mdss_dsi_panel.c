@@ -528,7 +528,6 @@ end:
 	extern bool t2u_scr_suspended;
 	extern void touch_suspend(void);
 	extern void touch_resume(void);
-	extern bool prox_covered;
 #endif
 
 static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
@@ -625,8 +624,7 @@ disable_regs:
 #endif
 #ifdef CONFIG_TOUCHSCREEN_TAP2UNLOCK
 	t2u_scr_suspended = true;
-	if(!prox_covered)
-		t2u_allow = false;
+	t2u_allow = false;
 	if (t2u_switch > 0)
 		touch_resume();
 #endif
