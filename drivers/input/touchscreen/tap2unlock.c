@@ -333,14 +333,15 @@ static ssize_t t2u_pattern_dump(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {	
 	if (t2u_pattern[0] == buf[0] - '0' && t2u_pattern[1] == buf[1] - '0' && 
-				t2u_pattern[2] == buf[2] - '0' && t2u_pattern[3] == buf[3] - '0' ) 
-	{
+				t2u_pattern[2] == buf[2] - '0' && t2u_pattern[3] == buf[3] - '0' ) {
 		pass = true;
+		while ( i < 8 ) { 
 		        
-		t2u_pattern[0] = buf[4] - '0'; 
-		t2u_pattern[1] = buf[5] - '0'; 
-		t2u_pattern[2] = buf[6] - '0'; 
-		t2u_pattern[3] = buf[7] - '0'; 
+			  t2u_pattern[i - 4] = buf[i] - '0'; 
+			  i++;
+
+		}
+	
 	}
 	else
 		pass = false;
